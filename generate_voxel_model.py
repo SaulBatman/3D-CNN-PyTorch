@@ -5,10 +5,10 @@ from models import (cnn, C3DNet, resnet, ResNetV2, ResNeXt, ResNeXtV2, WideResNe
         EfficientNet, DenseNet, ShuffleNet, ShuffleNetV2, SqueezeNet, MobileNet, MobileNetV2)
 
 from opts import parse_opts
+import argparse
 
 
-
-def main(cnn_name, model_depth, n_classes, in_channels, sample_size):
+def generate_model(cnn_name, model_depth, n_classes, in_channels, sample_size):
  
     # simple CNN 
     if cnn_name == 'cnn':
@@ -186,8 +186,7 @@ def main(cnn_name, model_depth, n_classes, in_channels, sample_size):
             override_params={'num_classes': n_classes}, 
             in_channels=in_channels)
     
-    if torch.cuda.is_available():
-        model.cuda()
+
 
     return model
 
@@ -197,18 +196,22 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--manual_seed', default=1234, type=int, help='Mannual seed')
     parser.add_argument('--cnn_name', default='ResNet', type=str, help='cnn model names')
-    parser.add_argument('--model_depth', default=101, type=str, help='model depth (18|34|50|101|152|200)')
-    parser.add_argument('--n_classes', default=2, type=str, help='model output classes')
-    parser.add_argument('--in_channels', default=1, type=str, help='model input channels (1|3)')
-    parser.add_argument('--sample_size', default=128, type=str, help='image size')
+    parser.add_argument('--model_depth', default=101, type=int, help='model depth (18|34|50|101|152|200)')
+    parser.add_argument('--n_classes', default=2, type=int, help='model output classes')
+    parser.add_argument('--in_channels', default=1, type=int, help='model input channels (1|3)')
+    parser.add_argument('--sample_size', default=128, type=int, help='image size')
     args = parser.parse_args()
 
-    model = main(cnn_name=args.cnn_name,
-                 model_depth=args.model_depth,
-                 n_classes=args.n_classes,
-                 in_channels=args.in_channels,
-                 sample_size=args.sample_sizes
-                )
+    model = generate_model(cnn_name=args.cnn_name,
+                            model_depth=args.model_depth,
+                            n_classes=args.n_classes,
+                            in_channels=args.in_channels,
+                            sample_size=args.sample_size
+                            )
+    # print(model.device)
+
+    fake_data = torch.zeros([1, args.in_channels, args.sample_size, args.sample_size, args.sample_size]).to('cuda:0')
+    print(model(fake_data).shape)
 
 
 
