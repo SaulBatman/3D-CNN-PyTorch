@@ -1,0 +1,1 @@
+unet3d folder heavily relies on wolny/pytorch-3dunet. Thanks for the great code!

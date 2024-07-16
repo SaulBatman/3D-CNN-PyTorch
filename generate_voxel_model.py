@@ -3,7 +3,7 @@ from torch import nn
 from models.cnn import cnn3d
 from models import (cnn, C3DNet, resnet, ResNetV2, ResNeXt, ResNeXtV2, WideResNet, PreActResNet,
         EfficientNet, DenseNet, ShuffleNet, ShuffleNetV2, SqueezeNet, MobileNet, MobileNetV2)
-
+from unet3d.model import get_model
 from opts import parse_opts
 import argparse
 
@@ -186,6 +186,19 @@ def generate_model(cnn_name, model_depth, n_classes, in_channels, sample_size):
             override_params={'num_classes': n_classes}, 
             in_channels=in_channels)
     
+    # 3DUNet
+    elif 'UNet' in cnn_name:
+        """
+        3DUnet
+        """
+        config = {
+            'name': cnn_name,
+            'in_channels': in_channels,
+            'out_channels': 16,
+            'is_segmentation': False,
+        }
+        model = get_model(config)
+    
 
 
     return model
@@ -206,11 +219,11 @@ if __name__ == '__main__':
                             model_depth=args.model_depth,
                             n_classes=args.n_classes,
                             in_channels=args.in_channels,
-                            sample_size=args.sample_size
+                            sample_size=args.sample_size,
                             )
     # print(model.device)
 
-    fake_data = torch.zeros([1, args.in_channels, args.sample_size, args.sample_size, args.sample_size]).to('cuda:0')
+    fake_data = torch.zeros([1, args.in_channels, args.sample_size, args.sample_size, args.sample_size])
     print(model(fake_data).shape)
 
 
