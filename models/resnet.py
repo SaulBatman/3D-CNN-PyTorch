@@ -6,7 +6,8 @@ import torch.nn.functional as F
 
 
 def get_inplanes():
-    return [64, 128, 256, 512]
+    # return [64, 128, 256, 512]
+    return [16, 32, 64, 128]
 
 
 def conv3x3x3(in_planes, out_planes, stride=1):
