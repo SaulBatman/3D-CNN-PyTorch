@@ -196,8 +196,10 @@ def generate_model(cnn_name, model_depth, n_classes, in_channels, sample_size):
             'in_channels': in_channels,
             'out_channels': 16,
             'is_segmentation': False,
-            'f_maps': 32,
-            'num_levels': 3,
+            'f_maps': 16,
+            'num_levels': 2,
+            'pool_kernel_size': 5,
+            'conv_kernel_size': 7, 
         }
         model = get_model(config)
     
